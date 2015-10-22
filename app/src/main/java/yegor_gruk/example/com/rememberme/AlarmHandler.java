@@ -15,9 +15,6 @@ import yegor_gruk.example.com.rememberme.Activities.MainActivity;
 import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
 import yegor_gruk.example.com.rememberme.ModelsAndPrefs.AlarmScheduleModel;
 
-/**
- * Created by Egor on 04.10.2015.
- */
 public class AlarmHandler {
 
     private Context context;
@@ -82,41 +79,5 @@ public class AlarmHandler {
 
         notificationManager.notify(0, builder);
     }
-    /*
-    public void sendNotification(){
 
-        String bigText = "Это я, почтальон Печкин. Принес для вас посылку. "
-                + "Только я вам ее не отдам. Потому что у вас документов нету. ";
-
-        Intent resultIntent = new Intent(context, MainActivity.class);
-
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification.Builder builder = new Notification.Builder(context)
-                .setTicker("Пришла посылка!")
-                .setContentTitle("Уведомление с большим текстом")
-                .setContentText(
-                        "Это я, почтальон Печкин. Принес для вас посылку")
-                .setSmallIcon(R.drawable.ic_group_work_black_24dp)
-                .addAction(R.drawable.ic_invert_colors_black_48dp, "Запустить активность", resultPendingIntent)
-                .setAutoCancel(true);
-
-        Notification notification = new Notification.BigTextStyle(builder)
-                .bigText(bigText).build();
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(1, notification);
-
-    }
-    */
 }

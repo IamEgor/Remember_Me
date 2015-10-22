@@ -6,9 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-/**
- * Created by Egor on 17.10.2015.
- */
 public class AdapterModel {
 
     public static final String COMPLETED = "Завершен";
@@ -81,7 +78,6 @@ public class AdapterModel {
 
     public int getImageId() {
 
-        //if (label == null)
         label = getLabel();
 
         imageId = map.get(label);

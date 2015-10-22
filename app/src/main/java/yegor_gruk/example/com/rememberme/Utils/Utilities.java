@@ -10,9 +10,6 @@ import android.widget.Toast;
 
 import yegor_gruk.example.com.rememberme.R;
 
-/**
- * Created by Egor on 06.10.2015.
- */
 public class Utilities {
 
     private static final double GOLDEN_RATIO = 1.61803398875;
@@ -42,7 +39,7 @@ public class Utilities {
         Log.d("^^^", "___________");
 
         toast.setGravity(Gravity.TOP | Gravity.LEFT, (int) (location[0] - 2.3 * view.getWidth()), location[1] - view.getHeight() / 2);
-        //toast.setGravity( Gravity.TOP, view.getLeft() - view.getWidth() / 2 - toast.getView().getWidth() / 2, view.getBottom());
+
         toast.show();
     }
 
@@ -63,7 +60,7 @@ public class Utilities {
         toast.setGravity(Gravity.TOP | Gravity.LEFT, location[0] - 200, location[1] - view.getHeight() / 2);
 
         toast.show();
-//      toast.setText("I am toast");
+
         toast.setDuration(Toast.LENGTH_SHORT);
         Log.d("^^^", "getRight()" + view.getRight());
         Log.d("^^^", "getWidth() " + view.getWidth());

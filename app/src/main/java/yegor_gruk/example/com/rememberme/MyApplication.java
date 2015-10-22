@@ -4,10 +4,7 @@ import android.app.Application;
 
 import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
 
-/**
- * Created by Egor on 21.10.2015.
- */
-public class MyApplicaton extends Application {
+public class MyApplication extends Application {
 
     @Override
     public void onCreate() {

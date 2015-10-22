@@ -9,9 +9,6 @@ import android.content.Intent;
 import yegor_gruk.example.com.rememberme.Activities.MainActivity;
 import yegor_gruk.example.com.rememberme.R;
 
-/**
- * Created by Egor on 08.10.2015.
- */
 public class NotificationHelper {
 
     private static final String KEY_OK = "KEY_OK";

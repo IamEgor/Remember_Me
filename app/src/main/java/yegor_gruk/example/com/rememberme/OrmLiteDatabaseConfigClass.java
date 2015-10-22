@@ -1,9 +1,5 @@
 package yegor_gruk.example.com.rememberme;
 
-/**
- * Created by Egor on 14.09.2015.
- */
-
 import com.j256.ormlite.android.apptools.OrmLiteConfigUtil;
 
 import java.io.File;
