@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="imageId">
+        <item>R.drawable.ic_alarm_on_black_48dp</item>
+        <item>R.drawable.ic_alarm_off_black_48dp</item>
+        <item>R.drawable.ic_alarm_black_48dp</item>
+        <item>R.drawable.ic_alarm_sleep_black_48dp</item>
+    </string-array>
+
+</resources>
