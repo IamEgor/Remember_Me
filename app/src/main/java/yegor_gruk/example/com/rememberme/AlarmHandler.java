@@ -7,54 +7,87 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.util.Calendar;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 import yegor_gruk.example.com.rememberme.Activities.MainActivity;
 import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
-import yegor_gruk.example.com.rememberme.ModelsAndPrefs.AlarmScheduleModel;
+import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
+import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
+import yegor_gruk.example.com.rememberme.DataBase.ModelDAO;
 
 public class AlarmHandler {
 
     private Context context;
-    private PendingIntent pendingIntent;
+    private Intent alarmIntent;
+    private AlarmManager manager;
 
     public AlarmHandler(Context context) {
+
         this.context = context;
-        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+
+        alarmIntent = new Intent(context, AlarmReceiver.class);
+        manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
 
-    public void setRepeatingAlarm(long intervalLength, int times) {
+    public void createAlarmQueue(long[] alarms) throws SQLException {
 
-        /*
-         * Слабое место. int может быть переполнен
-         */
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
-        AlarmScheduleModel scheduleModel = new AlarmScheduleModel(context, (int) intervalLength, times);
-        scheduleModel.saveAll();
+        DatabaseModel databaseModel = new DatabaseModel();
 
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        ModelDAO dao = HelperFactory.getHelper().getModelDAO();
 
-        Calendar calendar = Calendar.getInstance();
-        long nextAlarmAt = System.currentTimeMillis() + intervalLength;
-        calendar.setTimeInMillis(nextAlarmAt);
+        for (long alarmTime : alarms) {
 
-        String message = "First alarm at " + calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
+            Log.wtf("!!!!!", "alarm at " + format.format(alarmTime));
 
-        Log.d("AH.setRepeatingAlarm()", message);
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            databaseModel.setRepTime(alarmTime);
+            databaseModel.setIsActive(true);
 
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                intervalLength, pendingIntent);
+            dao.create(databaseModel);
+
+            setAlarm(alarmTime);
+        }
+
+        //setAlarms(alarms);
+
     }
 
-    public void cancelAlarm() {
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+    /*
+    public void setAlarms(long[] alarms) {
+
+        for (long alarmTime : alarms)
+            setAlarm(alarmTime);
+
+    }
+    */
+
+    public void setAlarm(long idAndTime) {
+
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra("FUCK", "FUCK$" + idAndTime);
+        // Loop counter `i` is used as a `requestCode`
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) idAndTime, intent, 0);
+
+        Log.wtf("AlarmHandler ", " int " + ((int) idAndTime) + " long " + idAndTime);
+
+        //PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) idAndTime, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        //setExactAndAllowWhileIdle()
+        //setAlarmClock())));
+        manager.set(AlarmManager.RTC_WAKEUP, idAndTime, pendingIntent);
+
+    }
+
+    public void cancelAlarm(long idAndTime) {
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) idAndTime, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+
         manager.cancel(pendingIntent);
-        Toast.makeText(context, "Alarm Canceled", Toast.LENGTH_SHORT).show();
     }
 
     public void sendNotification() {
@@ -79,5 +112,44 @@ public class AlarmHandler {
 
         notificationManager.notify(0, builder);
     }
+
+     /*
+    public void setRepeatingAlarm(long intervalLength, int times) {
+
+
+         //Слабое место. int может быть переполнен
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        long temp = new Date().getTime();
+
+        long[] array = new long[times];
+
+
+        AlarmScheduleModel scheduleModel = new AlarmScheduleModel(context, (int) intervalLength, times);
+        scheduleModel.saveAll();
+
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        long nextAlarmAt = System.currentTimeMillis() + intervalLength;
+        calendar.setTimeInMillis(nextAlarmAt);
+
+        String message = "First alarm at " + calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
+
+        Log.d("AH.setRepeatingAlarm()", message);
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                intervalLength, pendingIntent);
+
+    }
+
+
+    public void cancelAlarm() {
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);
+        Toast.makeText(context, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+    }
+    */
 
 }

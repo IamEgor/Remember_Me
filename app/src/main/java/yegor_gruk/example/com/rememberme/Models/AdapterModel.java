@@ -1,11 +1,20 @@
-package yegor_gruk.example.com.rememberme;
+package yegor_gruk.example.com.rememberme.Models;
 
 import android.util.Log;
+
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import yegor_gruk.example.com.rememberme.R;
+
+/**
+ * Created by Egor on 19.10.2015.
+ */
+@DatabaseTable
 public class AdapterModel {
 
     public static final String COMPLETED = "Завершен";
@@ -15,8 +24,13 @@ public class AdapterModel {
 
     private static final String ERROR = "Ошибка";
 
+    @DatabaseField(generatedId = true)
+    private Long id;
+    @DatabaseField
     private long timeMils;
+    @DatabaseField
     private boolean isActive;
+
 
     private String formatedTime;
     private String label;
@@ -78,6 +92,7 @@ public class AdapterModel {
 
     public int getImageId() {
 
+        //if (label == null)
         label = getLabel();
 
         imageId = map.get(label);

@@ -2,10 +2,9 @@ package yegor_gruk.example.com.rememberme.Activities;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,21 +18,25 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import yegor_gruk.example.com.rememberme.AlarmHandler;
-import yegor_gruk.example.com.rememberme.ModelsAndPrefs.AppPrefs;
+import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
+import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
+import yegor_gruk.example.com.rememberme.Prefs.MainActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
+import yegor_gruk.example.com.rememberme.Utils.Utilities;
 import yegor_gruk.example.com.rememberme.WaiterPackage.TimerWaiter;
 
 import static yegor_gruk.example.com.rememberme.Utils.Utilities.getAnatomicSpinnerDrag;
 import static yegor_gruk.example.com.rememberme.Utils.Utilities.getUsualSpinnerDrag;
 
-
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button okButton, cancelButton;
     private TextView textView1, textView2, intervals;
@@ -72,6 +75,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         dateFormat = new SimpleDateFormat(getString(R.string.time_format));
 
         prefs = new MainActivityPrefs(this);
+
+        textView1.setText(dateFormat.format(new Date().getTime()));
+        textView2.setText("23:59");
     }
 
     @Override
@@ -105,34 +111,40 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     }
 
-    private long calculateInterval() throws ParseException {
-
-        Date d1 = dateFormat.parse(textView1.getText().toString());
-        Date d2 = dateFormat.parse(textView2.getText().toString());
-        long divider = Long.parseLong(intervals.getText().toString());
-
-        return (d2.getTime() - d1.getTime()) / divider;
-    }
 
     public void setAlarm() {
-
         try {
 
-            int times = Integer.parseInt(intervals.getText().toString());
-            long intervalLength = calculateInterval();
-
             AlarmHandler alarmHandler = new AlarmHandler(this);
-            alarmHandler.setRepeatingAlarm(intervalLength, times);
+            alarmHandler.createAlarmQueue(Utilities.getTimes(textView1, textView2, intervals));
 
+        } catch (SQLException e) {
+            e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        } finally {
+            textView1.setClickable(false);
+            textView2.setClickable(false);
+            intervals.setClickable(false);
         }
+
 
     }
 
     public void cancelAlarm() {
-        AlarmHandler alarmHandler = new AlarmHandler(this);
-        alarmHandler.cancelAlarm();
+        //AlarmHandler alarmHandler = new AlarmHandler(this);
+        //alarmHandler.cancelAlarm();
+        try {
+            List<DatabaseModel> list = HelperFactory.getHelper().getModelDAO().getAllRecords();
+
+            Log.v("$$$$$$$$", "size = " + list.size());
+            for (DatabaseModel model : list) {
+                Log.v("$$$$$$$$", model.toString());
+            }
+        } catch (SQLException e) {
+            Toast.makeText(this, "cancelAlarm() " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
     }
 
     public void showTimerDialog(int id) throws ParseException {
@@ -218,8 +230,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onStart();
 
         intervals.setText(String.valueOf(prefs.getIntervals()));
-        textView1.setText(prefs.getFirst());
-        textView2.setText(prefs.getLast());
+        //textView1.setText(prefs.getFirst());
+        //textView2.setText(prefs.getLast());
 
     }
 
@@ -228,8 +240,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onPause();
 
         prefs.saveIntervals(Integer.parseInt(intervals.getText().toString()));
-        prefs.saveFirst(textView1.getText().toString());
-        prefs.saveLast(textView2.getText().toString());
+        //prefs.saveFirst(textView1.getText().toString());
+        //prefs.saveLast(textView2.getText().toString());
     }
 
     @Override
@@ -256,6 +268,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             //Toast.makeText(this, "action_list", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(this, ListActivity.class);
+            try {
+                intent.putExtra("longArray", Utilities.getTimes(textView1, textView2, intervals));
+                intent.putExtra("intervals", Integer.parseInt(intervals.getText().toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             startActivity(intent);
 
             return true;
@@ -264,48 +282,5 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    class MainActivityPrefs extends AppPrefs {
-
-        private static final String NUMBER_OF_INTERVALS = "NUMBER_OF_INTERVALS";
-        private static final String FIRST_POINT = "FIRST_POINT";
-        private static final String LAST_POINT = "LAST_POINT";
-
-        private Context context;
-
-        public MainActivityPrefs(Context context) {
-            super(context);
-            this.context = context;
-        }
-
-        public void saveIntervals(int interval) {
-            Log.v("saveIntervals() ", "" + interval);
-            put(NUMBER_OF_INTERVALS, interval);
-        }
-
-        public void saveFirst(String first) {
-            Log.v("saveFirst() ", "" + first);
-            put(FIRST_POINT, first);
-        }
-
-        public void saveLast(String last) {
-            Log.v("saveLast() ", "" + last);
-            put(LAST_POINT, last);
-        }
-
-        public int getIntervals() {
-            Log.v("getIntervals() ", "" + getInt(NUMBER_OF_INTERVALS, 1));
-            return getInt(NUMBER_OF_INTERVALS, 1);
-        }
-
-        public String getFirst() {
-            Log.v("getFirst() ", "" + getString(FIRST_POINT, dateFormat.format(new Date())));
-            return getString(FIRST_POINT, dateFormat.format(new Date()));
-        }
-
-        public String getLast() {
-            Log.v("getLast() ", "" + getString(LAST_POINT, "23:59"));
-            return getString(LAST_POINT, "23:59");
-        }
-    }
 
 }

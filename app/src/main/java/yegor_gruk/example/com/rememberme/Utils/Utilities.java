@@ -8,11 +8,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import yegor_gruk.example.com.rememberme.R;
 
 public class Utilities {
 
     private static final double GOLDEN_RATIO = 1.61803398875;
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
     public static int getAnatomicSpinnerDrag(int usualProgress) {
 
@@ -22,6 +27,36 @@ public class Utilities {
     public static int getUsualSpinnerDrag(int anatomicProgress) {
 
         return (int) Math.pow((anatomicProgress - 1) * 86.89, 1 / GOLDEN_RATIO);
+    }
+
+    public static long calculateInterval(TextView firstPoint, TextView secondPoint, TextView times) throws ParseException {
+
+        long divider = Long.parseLong(times.getText().toString());
+
+        Date d1 = dateFormat.parse(firstPoint.getText().toString());
+        Date d2 = dateFormat.parse(secondPoint.getText().toString());
+
+        return (d2.getTime() - d1.getTime()) / divider;
+    }
+
+    public static long[] getTimes(TextView firstPoint, TextView secondPoint, TextView times_) throws ParseException {
+
+        int times = Integer.parseInt(times_.getText().toString());
+
+        long startTime = dateFormat.parse(firstPoint.getText().toString()).getTime();
+        long stopTime = dateFormat.parse(secondPoint.getText().toString()).getTime();
+
+        long interval = (stopTime - startTime) / times;
+
+        long temp = System.currentTimeMillis();
+
+        long[] array = new long[times];
+
+        for (int i = 0; i < times; i++) {
+            array[i] = temp = temp + interval;
+        }
+
+        return array;
     }
 
     public static void makeToast(View view, Context context, String message) {

@@ -1,6 +1,8 @@
-package yegor_gruk.example.com.rememberme.ModelsAndPrefs;
+package yegor_gruk.example.com.rememberme.Models;
 
 import android.content.Context;
+
+import yegor_gruk.example.com.rememberme.Prefs.AppPrefs;
 
 /**
  * Created by Egor on 04.10.2015.

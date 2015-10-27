@@ -10,6 +10,10 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class DatabaseModel {
 
+    public static final String NAME_FIELD_ID = "id";
+    public static final String NAME_FIELD_TIME = "repTime";
+    public static final String NAME_FIELD_ACTIVE = "isActive";
+
     @DatabaseField(generatedId = true)
     private Long id;
 
@@ -41,6 +45,15 @@ public class DatabaseModel {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    @Override
+    public String toString() {
+        return "DatabaseModel{" +
+                "id=" + id +
+                ", repTime=" + repTime +
+                ", isActive=" + isActive +
+                '}';
     }
 
     @Override

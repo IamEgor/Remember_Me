@@ -8,9 +8,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import yegor_gruk.example.com.rememberme.AdapterModel;
+import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
+import yegor_gruk.example.com.rememberme.DataBase.ModelDAO;
+import yegor_gruk.example.com.rememberme.Models.AdapterModel;
 import yegor_gruk.example.com.rememberme.R;
 import yegor_gruk.example.com.rememberme.Utils.Utilities;
 
@@ -60,6 +63,7 @@ public class NewAdapter extends BaseAdapter {
         final ImageButton imageButton = (ImageButton) view.findViewById(R.id.newImageButton);
 
         textView.setText(model.getFormatedTime());
+
         imageButton.setBackgroundResource(model.getImageId());
 
 
@@ -69,6 +73,8 @@ public class NewAdapter extends BaseAdapter {
             public boolean onLongClick(View v) {
                 //Toast.makeText(context, model.getLabel(), Toast.LENGTH_SHORT).show();
                 Utilities.makeToast(imageButton, context, model.getLabel());
+
+
                 //Utilities.makeToast2(imageButton,context, model.getLabel());
                 return true;
             }
@@ -78,6 +84,12 @@ public class NewAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
+                try {
+                    ModelDAO dao = HelperFactory.getHelper().getModelDAO();
+                    dao.inverseBool(model.getTimeMils());//updateBool(model.getTimeMils());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 model.invertBool();
                 imageButton.setBackgroundResource(model.getImageId());
             }

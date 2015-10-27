@@ -1,4 +1,4 @@
-package yegor_gruk.example.com.rememberme.ModelsAndPrefs;
+package yegor_gruk.example.com.rememberme.Prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
