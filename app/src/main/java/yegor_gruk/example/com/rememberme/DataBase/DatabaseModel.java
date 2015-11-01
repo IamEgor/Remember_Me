@@ -1,26 +1,24 @@
 package yegor_gruk.example.com.rememberme.DataBase;
 
-/**
- * Created by Egor on 21.10.2015.
- */
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable
+@DatabaseTable(tableName = "DatabaseModel")
 public class DatabaseModel {
 
-    public static final String NAME_FIELD_ID = "id";
-    public static final String NAME_FIELD_TIME = "repTime";
-    public static final String NAME_FIELD_ACTIVE = "isActive";
+    public static final String TABLE_NAME = "DatabaseModel";
 
-    @DatabaseField(generatedId = true)
+    public static final String ID = "_id";
+    public static final String TIME = "repTime";
+    public static final String IS_ACTIVE = "isActive";
+
+    @DatabaseField(generatedId = true, columnName = ID)
     private Long id;
 
-    @DatabaseField
+    @DatabaseField(columnName = TIME)
     private long repTime;
 
-    @DatabaseField
+    @DatabaseField(columnName = IS_ACTIVE)
     private boolean isActive;
 
     public Long getId() {

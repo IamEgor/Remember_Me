@@ -10,7 +10,7 @@ fieldName=id
 generatedId=true
 # --field-end--
 # --field-start--
-fieldName=repTime
+fieldName=timeMils
 # --field-end--
 # --field-start--
 fieldName=isActive

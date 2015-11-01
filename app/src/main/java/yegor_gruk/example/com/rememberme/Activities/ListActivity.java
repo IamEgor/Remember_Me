@@ -1,61 +1,67 @@
 package yegor_gruk.example.com.rememberme.Activities;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import yegor_gruk.example.com.rememberme.Adapters.NewAdapter;
 import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
-import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
-import yegor_gruk.example.com.rememberme.Models.AdapterModel;
+import yegor_gruk.example.com.rememberme.Prefs.MainActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
+import yegor_gruk.example.com.rememberme.TEST_TEST.MyLoader;
 
-/**
- * Created by Egor on 19.10.2015.
- */
-public class ListActivity extends Activity {
+public class ListActivity extends Activity implements LoaderManager.LoaderCallbacks<List<DatabaseModel>> {
 
-    ListView listView;
+    public static final String TAG = ListActivity.class.getName();
+
+    private static final int URL_LOADER = 0;
+
+    NewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarms_list);
 
-        listView = (ListView) findViewById(R.id.listView);
+        ListView listView = (ListView) findViewById(R.id.listView);
 
-        Calendar cal = Calendar.getInstance();
+        adapter = new NewAdapter(this, new ArrayList<DatabaseModel>());// or null
 
-        ArrayList<AdapterModel> models = new ArrayList<>();
-
-        Toast.makeText(this, "" + getIntent().getIntExtra("intervals", -1), Toast.LENGTH_LONG).show();
-        try {
-            List<DatabaseModel> databaseModels = HelperFactory.getHelper().getModelDAO().getAllLastRecords(getIntent().getIntExtra("intervals", -1));
-            //List<DatabaseModel> databaseModels = HelperFactory.getHelper().getModelDAO().getAllRecords();
-
-            Log.wtf("^^^^^", " List<DatabaseModel>");
-
-            for (DatabaseModel databaseModel : databaseModels) {
-                Log.wtf("^^^^^", databaseModel.toString());
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        for (long item : getIntent().getLongArrayExtra("longArray")) {
-            models.add(new AdapterModel(true, item));
-        }
-
-        NewAdapter adapter = new NewAdapter(this, models);
         listView.setAdapter(adapter);
+
+        getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), this).forceLoad();
+    }
+
+    @Override
+    public Loader<List<DatabaseModel>> onCreateLoader(int loaderID, Bundle bundle) {
+
+        Log.d(TAG, "||onCreateLoader()|| - " + bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
+
+        switch (loaderID) {
+
+            case URL_LOADER:
+                return new MyLoader(this, bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
+
+            default:
+                return null;
+
+        }
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<DatabaseModel>> loader, List<DatabaseModel> databaseModels) {
+        adapter.setModels(databaseModels);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<DatabaseModel>> loader) {
+        adapter.setModels(new ArrayList<DatabaseModel>());
     }
 }

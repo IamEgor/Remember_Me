@@ -1,5 +1,7 @@
 package yegor_gruk.example.com.rememberme.DataBase;
 
+import android.util.Log;
+
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
@@ -28,32 +30,40 @@ public class ModelDAO extends BaseDaoImpl<DatabaseModel, Integer> {
 
         QueryBuilder<DatabaseModel, Integer> qb = this.queryBuilder();
 
-        Where where = qb.where();
+        Where<DatabaseModel, Integer> where = qb.where();
         // the name field must be equal to "foo"
-        where.eq(DatabaseModel.NAME_FIELD_ID, " id > (SELECT MAX(id) - " + last + " FROM DatabaseModel)");
+        where.gt(DatabaseModel.ID, "(SELECT MAX(" + DatabaseModel.ID +
+                ") - " + last + " FROM " + DatabaseModel.TABLE_NAME + ")");
+
+        Log.d("ModelDAO.getAllLastRec", "getStatement() : " + where.getStatement());
 
         return where.query();
     }
 
     @Deprecated
-    public void inverseBool(long time) throws SQLException {
+    public void inverseBool(int id, long time) throws SQLException {
 
-        DatabaseModel model = queryForId((int) getIdByTime(time));
+        DatabaseModel model = queryForId(id);
+
+        MyLogger.log(model);
 
         UpdateBuilder<DatabaseModel, Integer> updateBuilder = this.updateBuilder();
         // set the criteria like you would a QueryBuilder
-        updateBuilder.where().eq(DatabaseModel.NAME_FIELD_ID, time);
+        updateBuilder.where().eq(DatabaseModel.ID, id);
         // update the value of your field
 
         if (model.isActive())
-            updateBuilder.updateColumnValue(DatabaseModel.NAME_FIELD_ACTIVE, false);
+            updateBuilder.updateColumnValue(DatabaseModel.IS_ACTIVE, false);
         else
-            updateBuilder.updateColumnValue(DatabaseModel.NAME_FIELD_ACTIVE, true);
+            updateBuilder.updateColumnValue(DatabaseModel.IS_ACTIVE, true);
 
         updateBuilder.update();
     }
 
-    public long getIdByTime(long time) throws SQLException {
+
+
+    /*
+    public int getIdByTime(long time) throws SQLException {
 
         QueryBuilder<DatabaseModel, Integer> qb = this.queryBuilder();
 
@@ -69,6 +79,6 @@ public class ModelDAO extends BaseDaoImpl<DatabaseModel, Integer> {
 
         return model.getId();
     }
-
+    */
 
 }

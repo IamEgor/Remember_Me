@@ -268,12 +268,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Toast.makeText(this, "action_list", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(this, ListActivity.class);
-            try {
-                intent.putExtra("longArray", Utilities.getTimes(textView1, textView2, intervals));
-                intent.putExtra("intervals", Integer.parseInt(intervals.getText().toString()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            intent.putExtra(MainActivityPrefs.NUMBER_OF_INTERVALS, Integer.parseInt(intervals.getText().toString()));
+
             startActivity(intent);
 
             return true;

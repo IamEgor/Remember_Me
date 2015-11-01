@@ -5,42 +5,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
-import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
-import yegor_gruk.example.com.rememberme.DataBase.ModelDAO;
-import yegor_gruk.example.com.rememberme.Models.AdapterModel;
+import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
 import yegor_gruk.example.com.rememberme.R;
-import yegor_gruk.example.com.rememberme.Utils.Utilities;
 
-/**
- * Created by Egor on 18.10.2015.
- */
 public class NewAdapter extends BaseAdapter {
 
-    private Context context;
     private LayoutInflater inflater;
-    private ArrayList<AdapterModel> objects;
+    private List<DatabaseModel> models;
 
-    public NewAdapter(Context context, ArrayList<AdapterModel> objects) {
-        this.context = context;
-        this.objects = objects;
+    public NewAdapter(Context context, List<DatabaseModel> models) {
+        this.models = models;
+
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public void setModels(List<DatabaseModel> models) {
+        this.models = models;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return objects.size();
+        return models.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return objects.get(position);
+        return models.get(position);
     }
 
     @Override
@@ -51,52 +48,41 @@ public class NewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final View view;
-        if (convertView == null)
+        ViewHolder holder;
+
+        View view = convertView;
+
+        if (view == null) {
             view = inflater.inflate(R.layout.alarms_list_item, parent, false);
-        else
-            view = convertView;
 
-        final AdapterModel model = (AdapterModel) getItem(position);
+            holder = new ViewHolder();
 
-        final TextView textView = (TextView) view.findViewById(R.id.newTextView);
-        final ImageButton imageButton = (ImageButton) view.findViewById(R.id.newImageButton);
+            holder.id = (TextView) view.findViewById(R.id.newID);
+            holder.time = (TextView) view.findViewById(R.id.newTextView);
+            holder.image = (ImageView) view.findViewById(R.id.newImageButton);
 
-        textView.setText(model.getFormatedTime());
+            view.setTag(holder);
 
-        imageButton.setBackgroundResource(model.getImageId());
+        } else {
 
+            holder = (ViewHolder) view.getTag();
 
-        imageButton.setOnLongClickListener(new View.OnLongClickListener() {
+        }
 
-            @Override
-            public boolean onLongClick(View v) {
-                //Toast.makeText(context, model.getLabel(), Toast.LENGTH_SHORT).show();
-                Utilities.makeToast(imageButton, context, model.getLabel());
+        DatabaseModel model = models.get(position);
 
-
-                //Utilities.makeToast2(imageButton,context, model.getLabel());
-                return true;
-            }
-        });
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                try {
-                    ModelDAO dao = HelperFactory.getHelper().getModelDAO();
-                    dao.inverseBool(model.getTimeMils());//updateBool(model.getTimeMils());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                model.invertBool();
-                imageButton.setBackgroundResource(model.getImageId());
-            }
-        });
+        holder.id.setText(String.valueOf(model.getId()));
+        holder.time.setText(String.valueOf(model.getRepTime()));
 
         return view;
 
+
+    }
+
+    static class ViewHolder {
+        public TextView id;
+        public TextView time;
+        public ImageView image;
 
     }
 }
