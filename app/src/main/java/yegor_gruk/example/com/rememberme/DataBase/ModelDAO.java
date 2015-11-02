@@ -60,25 +60,4 @@ public class ModelDAO extends BaseDaoImpl<DatabaseModel, Integer> {
         updateBuilder.update();
     }
 
-
-
-    /*
-    public int getIdByTime(long time) throws SQLException {
-
-        QueryBuilder<DatabaseModel, Integer> qb = this.queryBuilder();
-
-        Where where = qb.where();
-        // the name field must be equal to "foo"
-        where.eq(DatabaseModel.NAME_FIELD_TIME, time);
-
-        DatabaseModel model = (DatabaseModel) where.query().get(0);
-
-        MyLogger.log(where.query());
-
-        MyLogger.log(model.getId());
-
-        return model.getId();
-    }
-    */
-
 }

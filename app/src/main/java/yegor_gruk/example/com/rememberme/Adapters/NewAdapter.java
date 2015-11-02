@@ -1,6 +1,7 @@
 package yegor_gruk.example.com.rememberme.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,24 +9,27 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.sql.SQLException;
 import java.util.List;
 
-import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
+import yegor_gruk.example.com.rememberme.Models.AdapterModel;
 import yegor_gruk.example.com.rememberme.R;
 
 public class NewAdapter extends BaseAdapter {
 
-    private LayoutInflater inflater;
-    private List<DatabaseModel> models;
+    public static final String TAG = NewAdapter.class.getName();
 
-    public NewAdapter(Context context, List<DatabaseModel> models) {
+    private LayoutInflater inflater;
+    private List<AdapterModel> models;
+
+    public NewAdapter(Context context, List<AdapterModel> models) {
         this.models = models;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setModels(List<DatabaseModel> models) {
+    public void setModels(List<AdapterModel> models) {
         this.models = models;
         notifyDataSetChanged();
     }
@@ -48,7 +52,7 @@ public class NewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder;
+        final ViewHolder holder;
 
         View view = convertView;
 
@@ -69,20 +73,41 @@ public class NewAdapter extends BaseAdapter {
 
         }
 
-        DatabaseModel model = models.get(position);
+        final AdapterModel model = models.get(position);
+        //final AdapterModel adapterModel = new AdapterModel(model);
 
         holder.id.setText(String.valueOf(model.getId()));
-        holder.time.setText(String.valueOf(model.getRepTime()));
+        holder.time.setText(model.getFormattedTime());
+
+
+        holder.image.setImageResource(model.getImageId());
+
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+
+                    model.invertBool();
+
+                } catch (SQLException e) {
+
+                    Log.d(TAG, e.getMessage());
+
+                    throw new RuntimeException();
+                }
+
+                holder.image.setImageResource(model.getImageId());
+            }
+        });
+
 
         return view;
-
-
     }
 
     static class ViewHolder {
         public TextView id;
         public TextView time;
         public ImageView image;
-
     }
 }

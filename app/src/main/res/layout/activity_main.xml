@@ -1,45 +1,18 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_awesome_toolbar"
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize" />
-
-    <LinearLayout
-        android:id="@+id/layout3"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:orientation="horizontal"
         android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="Number ot intervals : "
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/intervals"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="intervals"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/layout1"
@@ -98,13 +71,40 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Number ot intervals : "
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/intervals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="intervals"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <Button
             android:id="@+id/okButton"
@@ -119,5 +119,4 @@
             android:text="cancel alarm" />
     </LinearLayout>
 
-
-</LinearLayout>
+</RelativeLayout>

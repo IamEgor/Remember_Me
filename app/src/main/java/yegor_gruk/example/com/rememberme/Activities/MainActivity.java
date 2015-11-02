@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
+        setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -118,17 +118,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             AlarmHandler alarmHandler = new AlarmHandler(this);
             alarmHandler.createAlarmQueue(Utilities.getTimes(textView1, textView2, intervals));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         } finally {
-            textView1.setClickable(false);
-            textView2.setClickable(false);
-            intervals.setClickable(false);
+            linearLayout1.setEnabled(false);
+            linearLayout2.setEnabled(false);
+            linearLayout3.setEnabled(false);
+
+            okButton.setEnabled(false);
+            cancelButton.setEnabled(false);
         }
-
-
     }
 
     public void cancelAlarm() {

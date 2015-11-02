@@ -1,14 +1,20 @@
 package yegor_gruk.example.com.rememberme.Models;
 
+import android.util.Log;
+
 import com.j256.ormlite.table.DatabaseTable;
 
-import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 
-/**
- * Created by Egor on 19.10.2015.
- */
+import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
+import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
+import yegor_gruk.example.com.rememberme.R;
+
 @DatabaseTable
-public class AdapterModel extends DatabaseModel {
+public class AdapterModel {
 
     public static final String COMPLETED = "Завершен";
     public static final String MISSED = "Пропущен";
@@ -18,20 +24,13 @@ public class AdapterModel extends DatabaseModel {
     private static final String ERROR = "Ошибка";
 
 
-    /*
-    @DatabaseField(id = true)
-    private int id;
-    @DatabaseField
-    private long timeMils;
-    @DatabaseField
-    private boolean isActive;
-    */
-
-    /*
-
-    private String formatedTime;
+    private String formattedTime;
     private String label;
     private int imageId;
+
+    //private ModelDAO dao;
+    private DatabaseModel databaseModel;
+
     private HashMap<String, Integer> map = new HashMap<String, Integer>() {
         {
             put(COMPLETED, R.drawable.ic_alarm_on_black_48dp);
@@ -42,29 +41,37 @@ public class AdapterModel extends DatabaseModel {
     };
 
 
-    public AdapterModel(boolean isActive, long timeMils) {
-        this.isActive = isActive;
-        this.timeMils = timeMils;
-
+    public AdapterModel(DatabaseModel databaseModel) {
+        this.databaseModel = databaseModel;
     }
 
 
-    public void invertBool() {
-        isActive = !isActive;
+    public void invertBool() throws SQLException {
+
+        if (databaseModel.isActive())
+            databaseModel.setIsActive(false);
+        else
+            databaseModel.setIsActive(true);
+
+        HelperFactory.getHelper().getModelDAO().update(databaseModel);
+        //isActive = !isActive;
     }
 
-    public String getFormatedTime() {
+    public String getFormattedTime() {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        formatedTime = dateFormat.format(timeMils);
-        Log.d("###", formatedTime);
-        return formatedTime;
+        formattedTime = dateFormat.format(databaseModel.getRepTime());
+        Log.d("###", formattedTime);
+        return formattedTime;
     }
 
     public String getLabel() {
 
         Calendar cal = Calendar.getInstance();
         long currentTime = cal.getTimeInMillis();
+
+        long timeMils = databaseModel.getRepTime();
+        boolean isActive = databaseModel.isActive();
 
         if (timeMils < currentTime && isActive)
             label = COMPLETED;
@@ -82,15 +89,16 @@ public class AdapterModel extends DatabaseModel {
 
     public int getImageId() {
 
-        //if (label == null)
         label = getLabel();
 
         imageId = map.get(label);
-        Log.d("###", "" + imageId);
+
         return imageId;
     }
 
-    */
+    public long getId() {
+        return databaseModel.getId();
+    }
 
     /*
     private int[] pics = new int[]{
