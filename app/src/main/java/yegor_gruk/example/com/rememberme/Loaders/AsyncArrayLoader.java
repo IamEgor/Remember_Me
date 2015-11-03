@@ -1,4 +1,4 @@
-package yegor_gruk.example.com.rememberme.TEST_TEST;
+package yegor_gruk.example.com.rememberme.Loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
@@ -12,13 +12,13 @@ import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
 import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
 import yegor_gruk.example.com.rememberme.Models.AdapterModel;
 
-public class MyNewLoader extends AsyncTaskLoader<List<AdapterModel>> {
+public class AsyncArrayLoader extends AsyncTaskLoader<List<AdapterModel>> {
 
-    public static final String TAG = MyNewLoader.class.getName();
+    public static final String TAG = AsyncArrayLoader.class.getName();
 
     private int constructs;
 
-    public MyNewLoader(Context context, int constructs) {
+    public AsyncArrayLoader(Context context, int constructs) {
         super(context);
 
         this.constructs = constructs;

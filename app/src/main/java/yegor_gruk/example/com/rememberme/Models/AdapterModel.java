@@ -40,7 +40,6 @@ public class AdapterModel {
         }
     };
 
-
     public AdapterModel(DatabaseModel databaseModel) {
         this.databaseModel = databaseModel;
     }
@@ -98,6 +97,14 @@ public class AdapterModel {
 
     public long getId() {
         return databaseModel.getId();
+    }
+
+    public int getColor() {
+
+        if (databaseModel.getRepTime() < Calendar.getInstance().getTimeInMillis())
+            return R.color.disabled;
+        else
+            return R.color.white;
     }
 
     /*

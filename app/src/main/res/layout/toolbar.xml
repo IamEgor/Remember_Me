@@ -2,8 +2,10 @@
 
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/my_awesome_toolbar"
+    style="@style/Theme.MyTheme"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="top"
-    android:background="?attr/colorPrimary"
+    android:background="@color/primary"
+    android:fitsSystemWindows="true"
     android:minHeight="?attr/actionBarSize" />

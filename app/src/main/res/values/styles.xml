@@ -5,6 +5,8 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+
     </style>
 
     <style name="DialogAnimation">
@@ -12,8 +14,12 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
-    <style name="wfewefwe" parent="android:Widget.TextView">
-        <!-- Доделать -->
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <!-- Other attributes -->
     </style>
+
 
 </resources>

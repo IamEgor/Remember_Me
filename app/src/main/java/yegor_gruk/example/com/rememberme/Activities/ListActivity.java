@@ -2,23 +2,26 @@ package yegor_gruk.example.com.rememberme.Activities;
 
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import yegor_gruk.example.com.rememberme.Adapters.NewAdapter;
+import yegor_gruk.example.com.rememberme.Adapters.RVAdapter;
+import yegor_gruk.example.com.rememberme.Loaders.AsyncArrayLoader;
 import yegor_gruk.example.com.rememberme.Models.AdapterModel;
 import yegor_gruk.example.com.rememberme.Prefs.MainActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
-import yegor_gruk.example.com.rememberme.TEST_TEST.MyNewLoader;
 
 public class ListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<AdapterModel>> {
 
@@ -26,7 +29,9 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int URL_LOADER = 0;
 
-    NewAdapter adapter;
+    //NewAdapter adapter;
+
+    RVAdapter rvAdapter;
 
     private Toolbar toolbar;
 
@@ -38,12 +43,28 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
 
+        // TODO Вынести в values-v21 и values-v19
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
 
-        adapter = new NewAdapter(this, new ArrayList<AdapterModel>());
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
-        listView.setAdapter(adapter);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        }
+
+        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+
+        rv.setHasFixedSize(true);
+
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+
+        rvAdapter = new RVAdapter(new ArrayList<AdapterModel>());
+        rv.setAdapter(rvAdapter);
 
         getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), this).forceLoad();
     }
@@ -56,7 +77,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (loaderID) {
 
             case URL_LOADER:
-                return new MyNewLoader(this, bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
+                return new AsyncArrayLoader(this, bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
 
             default:
                 return null;
@@ -67,12 +88,14 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<AdapterModel>> loader, List<AdapterModel> databaseModels) {
-        adapter.setModels(databaseModels);
+        //adapter.setModels(databaseModels);
+        rvAdapter.setModels(databaseModels);
     }
 
     @Override
     public void onLoaderReset(Loader<List<AdapterModel>> loader) {
-        adapter.setModels(new ArrayList<AdapterModel>());
+        //adapter.setModels(new ArrayList<AdapterModel>());
+        rvAdapter.setModels(new ArrayList<AdapterModel>());
     }
 
     @Override

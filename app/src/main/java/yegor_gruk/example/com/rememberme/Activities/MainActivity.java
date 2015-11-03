@@ -3,14 +3,17 @@ package yegor_gruk.example.com.rememberme.Activities;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -18,16 +21,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import yegor_gruk.example.com.rememberme.AlarmHandler;
-import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
-import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
 import yegor_gruk.example.com.rememberme.Prefs.MainActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
 import yegor_gruk.example.com.rememberme.Utils.Utilities;
@@ -48,6 +47,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Toolbar toolbar;
 
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +63,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
+
+        // TODO Вынести в values-v21 и values-v19
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        }
 
         okButton = (Button) findViewById(R.id.okButton);
         cancelButton = (Button) findViewById(R.id.cancelAlarm);
@@ -78,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         textView1.setText(dateFormat.format(new Date().getTime()));
         textView2.setText("23:59");
+
     }
 
     @Override
@@ -130,9 +152,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
     public void cancelAlarm() {
         //AlarmHandler alarmHandler = new AlarmHandler(this);
         //alarmHandler.cancelAlarm();
+        /*
         try {
             List<DatabaseModel> list = HelperFactory.getHelper().getModelDAO().getAllRecords();
 
@@ -143,6 +167,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (SQLException e) {
             Toast.makeText(this, "cancelAlarm() " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        */
+        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+        cancelButton.startAnimation(shake);
+
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
     }
 
