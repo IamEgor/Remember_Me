@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:example="http://schemas.android.com/apk/lib/com.gruk.yegorka.testprefslistener.MyTimePref">
+
+    ,
+    <yegor_gruk.example.com.rememberme.Views.PreferenceViews.MySeekBarPref
+        android:defaultValue="5"
+        android:key="testKey"
+        android:persistent="true"
+        android:summary="Установлено %1$d интервалов"
+        android:title="Количесво интервалов" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="wifi"
+        android:summary="cool wifi"
+        android:title="wifi" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="hints"
+        android:summary="cool hints"
+        android:title="hints" />
+
+    <PreferenceCategory
+        android:key="preferences_time_category"
+        android:title="@string/preferences_time_category">
+
+        <yegor_gruk.example.com.rememberme.Views.PreferenceViews.MyTimePref
+            android:key="@string/start_time_key"
+            android:persistent="true"
+            android:summary="@string/start_time_summary"
+            android:title="@string/start_time_title"
+            example:is24HourView="true" />
+
+        <yegor_gruk.example.com.rememberme.Views.PreferenceViews.MyTimePref
+            android:defaultValue="23:59"
+            android:key="@string/stop_time_key"
+            android:persistent="true"
+            android:summary="@string/stop_time_summary"
+            android:title="@string/stop_time_title"
+            example:is24HourView="true" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

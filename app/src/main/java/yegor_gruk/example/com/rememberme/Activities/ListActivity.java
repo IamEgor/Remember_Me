@@ -2,6 +2,7 @@ package yegor_gruk.example.com.rememberme.Activities;
 
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.rey.material.widget.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +38,18 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     RVAdapter rvAdapter;
 
     private Toolbar toolbar;
+    private View emptyView;
+
+    private Drawable[] mDrawables = new Drawable[2];
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarms_list);
+        setContentView(R.layout.activity_list);
 
-        toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        //toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // TODO Вынести в values-v21 и values-v19
@@ -57,13 +66,32 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        emptyView = findViewById(R.id.empty_recycle);
+
+
+        if (true) {
+            rv.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
+        final FloatingActionButton fab_image = (FloatingActionButton) findViewById(R.id.fab_image);
+        mDrawables[0] = getResources().getDrawable(R.drawable.ic_plus);
+        mDrawables[1] = getResources().getDrawable(R.drawable.ic_cross);
+        fab_image.setIcon(mDrawables[index], false);
+        fab_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                index = (index + 1) % 2;
+                fab_image.setIcon(mDrawables[index], true);
+            }
+        });
 
         rv.setHasFixedSize(true);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
 
-        rvAdapter = new RVAdapter(new ArrayList<AdapterModel>());
+        rvAdapter = new RVAdapter(this, new ArrayList<AdapterModel>());
         rv.setAdapter(rvAdapter);
 
         getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), this).forceLoad();

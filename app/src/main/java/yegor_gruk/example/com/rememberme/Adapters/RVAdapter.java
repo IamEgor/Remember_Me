@@ -1,5 +1,6 @@
 package yegor_gruk.example.com.rememberme.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,8 +20,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
 
     private List<AdapterModel> models;
 
-    public RVAdapter(List<AdapterModel> models) {
+    private Context context;
+
+    public RVAdapter(Context context, List<AdapterModel> models) {
         this.models = models;
+        this.context = context;
     }
 
     public void setModels(List<AdapterModel> models) {
@@ -44,7 +48,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
+        // TODO создать нормальные OnClickListener()
         holder.id.setText(String.valueOf(models.get(position).getId()));
         holder.time.setText(models.get(position).getFormattedTime());
         holder.image.setImageResource(models.get(position).getImageId());
@@ -69,6 +73,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
                 holder.image.setImageResource(model.getImageId());
             }
         });
+
+        //holder.cv.setBackgroundResource(model.getBackgroundColor());
+        holder.cv.setCardBackgroundColor(context.getResources().getColor(model.getBackgroundColor()));
+
+        holder.id.setTextColor(context.getResources().getColor(model.getTextColor()));
+        holder.time.setTextColor(context.getResources().getColor(model.getTextColor()));
 
     }
 

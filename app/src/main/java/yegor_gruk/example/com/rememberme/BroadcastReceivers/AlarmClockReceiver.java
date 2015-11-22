@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import yegor_gruk.example.com.rememberme.AlarmHandler;
+import yegor_gruk.example.com.rememberme.Util.NotificationHelper;
 
 /**
  * Created by Egor on 05.10.2015.
@@ -32,9 +32,8 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         Toast.makeText(context, "AlarmClockReceiver catched", Toast.LENGTH_LONG).show();
         Log.d("AlarmClockReceiver", "AlarmClockReceiver catched");
 
-        AlarmHandler handler = new AlarmHandler(context);
-        handler.sendNotification();
-
+        NotificationHelper helper = new NotificationHelper(context);
+        helper.sendNotificationForSetUp("Время настало", "Настроить напоминание на сегодня");
     }
 }
 

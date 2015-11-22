@@ -12,5 +12,6 @@
         android:icon="@drawable/list"
         android:orderInCategory="200"
         android:title="Search"
-        app:showAsAction="ifRoom"></item>
+        app:showAsAction="ifRoom" />
+
 </menu>

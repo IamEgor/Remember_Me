@@ -8,4 +8,12 @@
         <item>R.drawable.ic_alarm_sleep_black_48dp</item>
     </string-array>
 
+    <!--Actions for pending intents-->
+
+    <string-array name="main_Actions">
+        <item>start</item>
+        <item>skip</item>
+    </string-array>
+
+
 </resources>

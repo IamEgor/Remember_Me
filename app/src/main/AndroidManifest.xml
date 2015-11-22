@@ -3,6 +3,8 @@
     package="yegor_gruk.example.com.rememberme">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
         android:name=".MyApplication"
@@ -20,18 +22,13 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".Activities.ListActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Activities.ListActivity" />
 
-        <receiver android:name=".BroadcastReceivers.AlarmReceiver">
-        </receiver>
+        <activity android:name=".Activities.Prefs" />
+
+        <receiver android:name=".BroadcastReceivers.AlarmReceiver" />
+
 
         <!-- Will not be called unless the application explicitly enables it -->
         <receiver
@@ -42,13 +39,13 @@
             </intent-filter>
         </receiver>
 
+
         <receiver android:name=".BroadcastReceivers.AlarmClockReceiver">
             <intent-filter>
                 <!--<action android:name="com.android.deskclock.ALARM_ALERT"/>-->
                 <action android:name="com.android.deskclock.ALARM_DONE" />
             </intent-filter>
         </receiver>
-
 
     </application>
 

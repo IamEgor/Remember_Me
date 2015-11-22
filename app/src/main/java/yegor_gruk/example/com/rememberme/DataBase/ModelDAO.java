@@ -11,7 +11,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import java.sql.SQLException;
 import java.util.List;
 
-import yegor_gruk.example.com.rememberme.Utils.MyLogger;
+import yegor_gruk.example.com.rememberme.Util.MyLogger;
 
 /**
  * Created by Egor on 21.10.2015.

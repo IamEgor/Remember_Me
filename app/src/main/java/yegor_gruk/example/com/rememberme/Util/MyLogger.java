@@ -1,4 +1,4 @@
-package yegor_gruk.example.com.rememberme.Utils;
+package yegor_gruk.example.com.rememberme.Util;
 
 import android.util.Log;
 

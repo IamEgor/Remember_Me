@@ -99,12 +99,20 @@ public class AdapterModel {
         return databaseModel.getId();
     }
 
-    public int getColor() {
+    public int getBackgroundColor() {
 
-        if (databaseModel.getRepTime() < Calendar.getInstance().getTimeInMillis())
-            return R.color.disabled;
+        if (databaseModel.getRepTime() > Calendar.getInstance().getTimeInMillis())
+            return R.color.background_enabled;
         else
-            return R.color.white;
+            return R.color.background_disabled;
+    }
+
+    public int getTextColor() {
+
+        if (databaseModel.getRepTime() > Calendar.getInstance().getTimeInMillis())
+            return R.color.text_enabled;
+        else
+            return R.color.text_disabled;
     }
 
     /*

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import yegor_gruk.example.com.rememberme.Prefs.MainActivityPrefs;
+import yegor_gruk.example.com.rememberme.Util.NotificationHelper;
 
 /**
  * Created by Egor on 04.10.2015.
@@ -18,7 +18,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Log.wtf("!!!!! intent.getAction() : ", intent.getAction());
 
-        MainActivityPrefs mainActivityPrefs = new MainActivityPrefs(context);
+        //MainActivityPrefs mainActivityPrefs = new MainActivityPrefs(context);
 
         Bundle bundle = intent.getExtras();
         for (String key : bundle.keySet()) {
@@ -26,19 +26,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.wtf("!!!!! values ", String.format("%s %s (%s)", key,
                     value.toString(), value.getClass().getName()));
         }
-        /*
-        Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
-        Log.d("AR.onReceive() - ", "I'm running");
 
-        AlarmScheduleModel scheduleModel = new AlarmScheduleModel(context);
-
-        if (scheduleModel.decrementReps() <= 0) {
-            Toast.makeText(context, "!!! See logs !!!", Toast.LENGTH_LONG).show();
-            Log.d("!!!", "AlarmReceiver.onReceive \n  if (scheduleModel.decrementReps() <= 0) { ");
-        }
-        */
-        //new AlarmHandler(context).cancelAlarm();
-        //добавить public поле AlarmScheduleModel в AlarmHandler
+        NotificationHelper helper = new NotificationHelper(context);
+        helper.createNotification();
 
     }
 }

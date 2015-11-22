@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -29,11 +30,11 @@ import java.util.Date;
 import yegor_gruk.example.com.rememberme.AlarmHandler;
 import yegor_gruk.example.com.rememberme.Prefs.MainActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
-import yegor_gruk.example.com.rememberme.Utils.Utilities;
+import yegor_gruk.example.com.rememberme.Util.Utilities;
 import yegor_gruk.example.com.rememberme.WaiterPackage.TimerWaiter;
 
-import static yegor_gruk.example.com.rememberme.Utils.Utilities.getAnatomicSpinnerDrag;
-import static yegor_gruk.example.com.rememberme.Utils.Utilities.getUsualSpinnerDrag;
+import static yegor_gruk.example.com.rememberme.Util.Utilities.getAnatomicSpinnerDrag;
+import static yegor_gruk.example.com.rememberme.Util.Utilities.getUsualSpinnerDrag;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         linearLayout2 = (LinearLayout) findViewById(R.id.layout2);
         linearLayout3 = (LinearLayout) findViewById(R.id.layout3);
 
-
         okButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
         linearLayout1.setOnClickListener(this);
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void setAlarm() {
+
         try {
 
             AlarmHandler alarmHandler = new AlarmHandler(this);
@@ -170,6 +171,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         */
         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
         cancelButton.startAnimation(shake);
+
+        //AlarmClock alarmClock = new AlarmClock
+
+        //Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+        Intent intent = new Intent(AlarmClock.ACTION_SET_TIMER);//ACTION_SHOW_ALARMS
+        intent.putExtra(AlarmClock.EXTRA_MINUTES, 20);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        startActivity(intent);
 
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
     }

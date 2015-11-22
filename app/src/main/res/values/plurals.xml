@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="plurals_11">
+        <item quantity="one">Установлено %1$d напоминание</item>
+        <item quantity="two">Установлено %1$d напоминания</item>
+        <item quantity="few">Установлено %1$d напоминания</item>
+        <item quantity="many">Установлено %1$d напоминаний</item>
+        <item quantity="other">Установлено %1$d напоминаний</item>
+    </plurals>
+
+</resources>
