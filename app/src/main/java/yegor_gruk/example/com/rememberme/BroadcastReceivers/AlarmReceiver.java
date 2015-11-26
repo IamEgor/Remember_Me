@@ -13,6 +13,8 @@ import yegor_gruk.example.com.rememberme.Util.NotificationHelper;
  */
 public class AlarmReceiver extends BroadcastReceiver {
 
+    public static final String STRING = "yegor_gruk.example.com.rememberme.Activities.ListActivity";
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -30,5 +32,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationHelper helper = new NotificationHelper(context);
         helper.createNotification();
 
+
+        Intent intent22 = new Intent(STRING);
+        context.sendBroadcast(intent22);
     }
 }

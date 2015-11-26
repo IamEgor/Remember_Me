@@ -2,7 +2,7 @@
 <resources>
 
     <declare-styleable name="ProgressWheel">
-        <attr name="pwText" format="string" />
+        <attr name="pwText" format="string|reference" />
         <attr name="pwTextColor" format="color" />
         <attr name="pwTextSize" format="dimension" />
         <attr name="pwBarColor" format="color" />

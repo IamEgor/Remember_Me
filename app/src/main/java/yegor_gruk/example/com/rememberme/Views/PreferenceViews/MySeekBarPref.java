@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -18,9 +19,6 @@ public class MySeekBarPref extends DialogPreference implements DiscreteSeekBar.O
 
     // Attribute names
     private static final String ATTR_DEFAULT_VALUE = "defaultValue";
-    private static final String ATTR_MIN_VALUE = "minValue";
-    private static final String ATTR_MAX_VALUE = "maxValue";
-
     // Default values for defaults
     private static final int DEFAULT_CURRENT_VALUE = 5;
     private static final int DEFAULT_MIN_VALUE = 1;
@@ -56,6 +54,13 @@ public class MySeekBarPref extends DialogPreference implements DiscreteSeekBar.O
         setPositiveButtonText(null);
         setNegativeButtonText(null);
         //------------------------------------------------------------------------------------------
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        persistInt(mDefaultValue);
+        Log.d("#####", "MySeekBarPref onAttachedToActivity || " + " shouldPersist() " + shouldPersist());
+        super.onAttachedToActivity();
     }
 
     @Override
@@ -107,21 +112,16 @@ public class MySeekBarPref extends DialogPreference implements DiscreteSeekBar.O
 
     @Override
     public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-        // Update current value
         mCurrentValue = value;
-        // Update label with current value
-        //textView.setText(Integer.toString(mCurrentValue));
     }
 
     @Override
     public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-        // Not used
         timerWaiter.runStartThread();
     }
 
     @Override
     public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-        // Not used
         timerWaiter.runStopThread();
     }
 }

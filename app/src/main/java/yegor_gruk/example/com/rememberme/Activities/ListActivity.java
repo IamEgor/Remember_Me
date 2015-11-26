@@ -1,6 +1,10 @@
 package yegor_gruk.example.com.rememberme.Activities;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -22,24 +26,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yegor_gruk.example.com.rememberme.Adapters.RVAdapter;
+import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
 import yegor_gruk.example.com.rememberme.Loaders.AsyncArrayLoader;
 import yegor_gruk.example.com.rememberme.Models.AdapterModel;
-import yegor_gruk.example.com.rememberme.Prefs.MainActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
+import yegor_gruk.example.com.rememberme.Util.Utilities;
 
 public class ListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<AdapterModel>> {
 
     public static final String TAG = ListActivity.class.getName();
 
     private static final int URL_LOADER = 0;
-
-    //NewAdapter adapter;
-
-    RVAdapter rvAdapter;
-
-    private Toolbar toolbar;
+    IntentFilter filter = new IntentFilter(AlarmReceiver.STRING);
+    MyBroadcast broadcast = new MyBroadcast();
+    private RVAdapter rvAdapter;
+    private RecyclerView rv;
     private View emptyView;
-
     private Drawable[] mDrawables = new Drawable[2];
     private int index;
 
@@ -49,7 +51,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_list);
 
         //toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // TODO Вынести в values-v21 и values-v19
@@ -65,14 +67,8 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         }
 
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        rv = (RecyclerView) findViewById(R.id.rv);
         emptyView = findViewById(R.id.empty_recycle);
-
-
-        if (true) {
-            rv.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
 
         final FloatingActionButton fab_image = (FloatingActionButton) findViewById(R.id.fab_image);
         mDrawables[0] = getResources().getDrawable(R.drawable.ic_plus);
@@ -81,8 +77,10 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         fab_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                index = (index + 1) % 2;
-                fab_image.setIcon(mDrawables[index], true);
+                Intent intent = new Intent(ListActivity.this, PrefsActivity.class);
+                startActivity(intent);
+                //index = (index + 1) % 2;
+                //fab_image.setIcon(mDrawables[index], true);
             }
         });
 
@@ -100,12 +98,12 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<AdapterModel>> onCreateLoader(int loaderID, Bundle bundle) {
 
-        Log.d(TAG, "||onCreateLoader()|| - " + bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
+        //Log.d(TAG, "||onCreateLoader()|| - " + bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
 
         switch (loaderID) {
 
             case URL_LOADER:
-                return new AsyncArrayLoader(this, bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
+                return new AsyncArrayLoader(this, 6);//bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
 
             default:
                 return null;
@@ -116,13 +114,20 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<AdapterModel>> loader, List<AdapterModel> databaseModels) {
-        //adapter.setModels(databaseModels);
-        rvAdapter.setModels(databaseModels);
+
+        long current = Utilities.getCurrentTime();
+        Log.w("onLoadFinished", "databaseModels.get(databaseModels.size() - 1).getId() "
+                + databaseModels.get(databaseModels.size() - 1).getTime()
+                + "          [databaseModels.size() - 1] " + (databaseModels.size() - 1));
+        if (databaseModels.size() == 0 || databaseModels.get(databaseModels.size() - 1).getTime() < current) {
+            rv.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else
+            rvAdapter.setModels(databaseModels);
     }
 
     @Override
     public void onLoaderReset(Loader<List<AdapterModel>> loader) {
-        //adapter.setModels(new ArrayList<AdapterModel>());
         rvAdapter.setModels(new ArrayList<AdapterModel>());
     }
 
@@ -142,16 +147,37 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "action_settings", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "action_settings", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         if (id == R.id.action_list) {
-            Toast.makeText(this, "action_list", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "action_list", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcast, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcast);
+    }
+
+    class MyBroadcast extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(ListActivity.this, "MyBroadcast notifyDataSetChanged", Toast.LENGTH_LONG).show();
+            rvAdapter.notifyDataSetChanged();
+        }
     }
 
 }

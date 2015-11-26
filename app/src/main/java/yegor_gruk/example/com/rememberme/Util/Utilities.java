@@ -1,6 +1,7 @@
 package yegor_gruk.example.com.rememberme.Util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -11,6 +12,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import yegor_gruk.example.com.rememberme.Prefs.AppPrefs;
+import yegor_gruk.example.com.rememberme.R;
 
 public class Utilities {
 
@@ -47,6 +51,38 @@ public class Utilities {
         long interval = (stopTime - startTime) / times;
 
         long temp = System.currentTimeMillis();
+
+        long[] array = new long[times];
+
+        for (int i = 0; i < times; i++) {
+            array[i] = temp = temp + interval;
+        }
+
+        return array;
+    }
+
+    public static long[] getAlarmsTime(Context context) throws ParseException {
+
+        SharedPreferences preferences = context.getSharedPreferences(AppPrefs.APP_PREFS, Context.MODE_PRIVATE);
+
+        int times = preferences.getInt(context.getString(R.string.reps_key), -1);
+        String startTimeString = preferences.getString(context.getString(R.string.start_time_key), null);
+        String stopTimeString = preferences.getString(context.getString(R.string.stop_time_key), null);
+
+        if (times == -1 || startTimeString == null || stopTimeString == null) {
+            Log.wtf("$$$", "times = " + times);
+            Log.wtf("$$$", "startTimeString = " + startTimeString);
+            Log.wtf("$$$", "stopTimeString = " + stopTimeString);
+            throw new RuntimeException("Something went wrong");
+        }
+
+
+        long startTime = dateFormat.parse(startTimeString).getTime();
+        long stopTime = dateFormat.parse(stopTimeString).getTime();
+
+        long interval = (stopTime - startTime) / times;
+
+        long temp = getCurrentTime();
 
         long[] array = new long[times];
 
@@ -120,4 +156,7 @@ public class Utilities {
     }
 
 
+    public static long getCurrentTime() {
+        return System.currentTimeMillis();
+    }
 }

@@ -12,23 +12,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <!-- Receivers -->
+
         <activity
             android:name=".Activities.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.ListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.PrefsActivity" />
 
-
-        <activity android:name=".Activities.ListActivity" />
-
-        <activity android:name=".Activities.Prefs" />
+        <!-- Receivers -->
 
         <receiver android:name=".BroadcastReceivers.AlarmReceiver" />
-
 
         <!-- Will not be called unless the application explicitly enables it -->
         <receiver
@@ -38,15 +42,21 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-
         <receiver android:name=".BroadcastReceivers.AlarmClockReceiver">
             <intent-filter>
-                <!--<action android:name="com.android.deskclock.ALARM_ALERT"/>-->
+
+                <!-- <action android:name="com.android.deskclock.ALARM_ALERT"/> -->
                 <action android:name="com.android.deskclock.ALARM_DONE" />
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".MyIntentService"
+            android:exported="false" />
+        <service
+            android:name=".MyService"
+            android:enabled="false"
+            android:exported="false"></service>
     </application>
 
 </manifest>

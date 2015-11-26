@@ -2,24 +2,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:example="http://schemas.android.com/apk/lib/com.gruk.yegorka.testprefslistener.MyTimePref">
 
-    ,
-    <yegor_gruk.example.com.rememberme.Views.PreferenceViews.MySeekBarPref
-        android:defaultValue="5"
-        android:key="testKey"
-        android:persistent="true"
-        android:summary="Установлено %1$d интервалов"
-        android:title="Количесво интервалов" />
+    <PreferenceCategory
+        android:key="preferences_reps_category"
+        android:title="@string/preferences_reps_category">
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="wifi"
-        android:summary="cool wifi"
-        android:title="wifi" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="hints"
-        android:summary="cool hints"
-        android:title="hints" />
+        <yegor_gruk.example.com.rememberme.Views.PreferenceViews.MySeekBarPref
+            android:defaultValue="1"
+            android:key="@string/reps_key"
+            android:persistent="true"
+            android:summary="Установлено %1$d интервалов"
+            android:title="Количесво интервалов" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:key="preferences_time_category"
@@ -42,5 +36,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="preferences_tools_category"
+        android:title="@string/preferences_tools_category">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="wifi"
+            android:summary="Вызов инструмента"
+            android:title="Инструмент" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -23,12 +23,10 @@ public class AdapterModel {
 
     private static final String ERROR = "Ошибка";
 
-
     private String formattedTime;
     private String label;
     private int imageId;
 
-    //private ModelDAO dao;
     private DatabaseModel databaseModel;
 
     private HashMap<String, Integer> map = new HashMap<String, Integer>() {
@@ -43,7 +41,6 @@ public class AdapterModel {
     public AdapterModel(DatabaseModel databaseModel) {
         this.databaseModel = databaseModel;
     }
-
 
     public void invertBool() throws SQLException {
 
@@ -113,6 +110,10 @@ public class AdapterModel {
             return R.color.text_enabled;
         else
             return R.color.text_disabled;
+    }
+
+    public long getTime() {
+        return databaseModel.getRepTime();
     }
 
     /*

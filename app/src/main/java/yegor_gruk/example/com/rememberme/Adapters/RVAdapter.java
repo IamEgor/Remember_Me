@@ -41,9 +41,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card_element, viewGroup, false);
-        ViewHolder pvh = new ViewHolder(v);
+        return new ViewHolder(v);
 
-        return pvh;
     }
 
     @Override

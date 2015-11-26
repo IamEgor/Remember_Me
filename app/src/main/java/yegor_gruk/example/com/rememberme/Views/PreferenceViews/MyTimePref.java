@@ -3,6 +3,7 @@ package yegor_gruk.example.com.rememberme.Views.PreferenceViews;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -19,11 +20,11 @@ public class MyTimePref extends DialogPreference {
     private static final String ATTR_SUMMARY = "summary";
     private static final String ATTR_IS_24_HOUR = "is24HourView";
 
-    private final String mDefaultValue;
+    //private final String mDefaultValue;
 
     private boolean is24HourView;
     private String summary;
-    private String timeStr;
+    private String mDefaultValue;
 
     private TimePicker picker;
 
@@ -31,7 +32,8 @@ public class MyTimePref extends DialogPreference {
         super(context, attrs);
 
         is24HourView = attrs.getAttributeBooleanValue(PREFERENCE_NS, ATTR_IS_24_HOUR, true);
-        mDefaultValue = attrs.getAttributeValue(ANDROID_NS, ATTR_DEFAULT_VALUE);
+
+        String timeStr = attrs.getAttributeValue(ANDROID_NS, ATTR_DEFAULT_VALUE);
 
         int attributeId = attrs.getAttributeResourceValue(ANDROID_NS, ATTR_SUMMARY, -1);
 
@@ -40,13 +42,21 @@ public class MyTimePref extends DialogPreference {
 
         summary = context.getString(attributeId);
 
-        if (mDefaultValue != null)
-            timeStr = mDefaultValue;
+        Log.wtf("MyTimePref constructor", " timeStr -" + timeStr);
+
+        if (timeStr != null)
+            mDefaultValue = timeStr;
         else
-            timeStr = Utilities.getTimeStr();
+            mDefaultValue = Utilities.getTimeStr();
 
         setDialogTitle(null);
 
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        persistString(mDefaultValue);
+        super.onAttachedToActivity();
     }
 
     @Override
@@ -55,11 +65,11 @@ public class MyTimePref extends DialogPreference {
         picker = new TimePicker(getContext());
         picker.setIs24HourView(is24HourView);
 
-        timeStr = getPersistedString(timeStr);
+        mDefaultValue = getPersistedString(mDefaultValue);
 
         try {
 
-            int[] hoursAndMinutes = Utilities.getHoursAndMinutes(timeStr);
+            int[] hoursAndMinutes = Utilities.getHoursAndMinutes(mDefaultValue);
 
             picker.setCurrentHour(hoursAndMinutes[0]);
             picker.setCurrentMinute(hoursAndMinutes[1]);
@@ -83,9 +93,9 @@ public class MyTimePref extends DialogPreference {
             int hour = picker.getCurrentHour();
             int minute = picker.getCurrentMinute();
 
-            timeStr = Utilities.getTimeStr(hour, minute);
+            mDefaultValue = Utilities.getTimeStr(hour, minute);
 
-            persistString(timeStr);
+            persistString(mDefaultValue);
 
         }
 
@@ -96,7 +106,7 @@ public class MyTimePref extends DialogPreference {
     public CharSequence getSummary() {
 
         String summary = super.getSummary().toString();
-        String value = getPersistedString(timeStr);
+        String value = getPersistedString(mDefaultValue);
 
         return String.format(summary, value);
     }
