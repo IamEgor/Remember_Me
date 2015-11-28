@@ -76,11 +76,12 @@ public class Utilities {
             throw new RuntimeException("Something went wrong");
         }
 
+        Log.v("getAlarmsTime", "times - " + times + " startTimeString - " + startTimeString + " stopTimeString - " + stopTimeString);
 
         long startTime = dateFormat.parse(startTimeString).getTime();
         long stopTime = dateFormat.parse(stopTimeString).getTime();
 
-        long interval = (stopTime - startTime) / times;
+        long interval = (stopTime - startTime) / (times);
 
         long temp = getCurrentTime();
 

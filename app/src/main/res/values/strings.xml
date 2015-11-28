@@ -11,8 +11,8 @@
     <string name="set_up">Set up</string>
     <string name="restart_now">Restart now</string>
 
-    <string name="empty_list_title"> Нет напоминаний</string>
-    <string name="empty_list_text"> Создайте новый спикок напоминаний, нажав кнопку добавить</string>
+    <string name="empty_list_title">У Вас нет текущих напоминаний</string>
+    <string name="empty_list_text">Для создания нового списка напоминаний, нажмите на кнопку снизу</string>
 
 
     <string name="reps_key">reps_key</string>

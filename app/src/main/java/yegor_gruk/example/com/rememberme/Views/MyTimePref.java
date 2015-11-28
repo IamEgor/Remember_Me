@@ -1,4 +1,4 @@
-package yegor_gruk.example.com.rememberme.Views.PreferenceViews;
+package yegor_gruk.example.com.rememberme.Views;
 
 import android.content.Context;
 import android.preference.DialogPreference;
@@ -40,7 +40,7 @@ public class MyTimePref extends DialogPreference {
         if (attributeId == -1)
             throw new RuntimeException("invalid summary resource");
 
-        summary = context.getString(attributeId);
+        //summary = context.getString(attributeId);
 
         Log.wtf("MyTimePref constructor", " timeStr -" + timeStr);
 
@@ -55,7 +55,8 @@ public class MyTimePref extends DialogPreference {
 
     @Override
     protected void onAttachedToActivity() {
-        persistString(mDefaultValue);
+        if (getPersistedString(null) == null)
+            persistString(mDefaultValue);
         super.onAttachedToActivity();
     }
 

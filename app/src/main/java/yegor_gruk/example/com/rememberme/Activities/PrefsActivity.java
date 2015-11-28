@@ -1,5 +1,6 @@
 package yegor_gruk.example.com.rememberme.Activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -23,17 +24,18 @@ public class PrefsActivity extends AppCompatPreferenceActivity implements Shared
     private final View.OnClickListener mActionBarListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Intent returnIntent = new Intent();
             if (v.getId() == R.id.action_done) {
                 try {
                     AlarmHandler alarmHandler = new AlarmHandler(PrefsActivity.this);
                     alarmHandler.createAlarmQueue(Utilities.getAlarmsTime(PrefsActivity.this));
-
+                    setResult(RESULT_OK, returnIntent);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException();
                 }
             } else if (v.getId() == R.id.action_cancel) {
                 //TODO сброс значений полей
-                Toast.makeText(PrefsActivity.this, "action_cancel", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_CANCELED, returnIntent);
             }
             finish();
         }
@@ -52,11 +54,13 @@ public class PrefsActivity extends AppCompatPreferenceActivity implements Shared
 
             String startTime = getString(R.string.start_time_key);
             String stopTime = getString(R.string.stop_time_key);
+            String reps = getString(R.string.reps_key);
 
             SharedPreferences.Editor editor = getPreferenceScreen().getSharedPreferences().edit();
 
             editor.remove(startTime);
             editor.remove(stopTime);
+            editor.remove(reps);
 
             editor.apply();
         }

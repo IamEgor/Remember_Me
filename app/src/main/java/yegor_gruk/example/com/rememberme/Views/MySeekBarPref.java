@@ -1,4 +1,4 @@
-package yegor_gruk.example.com.rememberme.Views.PreferenceViews;
+package yegor_gruk.example.com.rememberme.Views;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +24,8 @@ public class MySeekBarPref extends DialogPreference implements DiscreteSeekBar.O
     private static final int DEFAULT_MIN_VALUE = 1;
     private static final int DEFAULT_MAX_VALUE = 21;
     private static final int DEFAULT_DELAY_MILLIS = 500;
+    // Default persist
+    private static final int DEFAULT_NOT_PERSISTED = -1;
     // Real defaults
     private final int mDefaultValue;
     private final int mMaxValue;
@@ -58,8 +60,9 @@ public class MySeekBarPref extends DialogPreference implements DiscreteSeekBar.O
 
     @Override
     protected void onAttachedToActivity() {
-        persistInt(mDefaultValue);
-        Log.d("#####", "MySeekBarPref onAttachedToActivity || " + " shouldPersist() " + shouldPersist());
+        if (getPersistedInt(DEFAULT_NOT_PERSISTED) == DEFAULT_NOT_PERSISTED)
+            persistInt(mDefaultValue);
+        Log.d("#####", "MySeekBarPref onAttachedToActivity || " + " getPersistedInt() " + getPersistedInt(DEFAULT_NOT_PERSISTED));
         super.onAttachedToActivity();
     }
 

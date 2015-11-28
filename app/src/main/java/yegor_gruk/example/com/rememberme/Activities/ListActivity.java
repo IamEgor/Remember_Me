@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.rey.material.widget.FloatingActionButton;
@@ -29,16 +31,21 @@ import yegor_gruk.example.com.rememberme.Adapters.RVAdapter;
 import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
 import yegor_gruk.example.com.rememberme.Loaders.AsyncArrayLoader;
 import yegor_gruk.example.com.rememberme.Models.AdapterModel;
+import yegor_gruk.example.com.rememberme.Prefs.AppPrefs;
 import yegor_gruk.example.com.rememberme.R;
 import yegor_gruk.example.com.rememberme.Util.Utilities;
 
 public class ListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<AdapterModel>> {
 
     public static final String TAG = ListActivity.class.getName();
+    public static final int RESULT_CODE = 1;
 
     private static final int URL_LOADER = 0;
     IntentFilter filter = new IntentFilter(AlarmReceiver.STRING);
     MyBroadcast broadcast = new MyBroadcast();
+    Button button;
+    boolean test_test;
+    SharedPreferences preferences;
     private RVAdapter rvAdapter;
     private RecyclerView rv;
     private View emptyView;
@@ -69,16 +76,29 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         rv = (RecyclerView) findViewById(R.id.rv);
         emptyView = findViewById(R.id.empty_recycle);
+        button = (Button) findViewById(R.id.setAlarmBtn);
+
+        preferences = getSharedPreferences(AppPrefs.APP_PREFS, MODE_PRIVATE);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListActivity.this, PrefsActivity.class);
+                startActivityForResult(intent, RESULT_CODE);
+            }
+        });
 
         final FloatingActionButton fab_image = (FloatingActionButton) findViewById(R.id.fab_image);
+
         mDrawables[0] = getResources().getDrawable(R.drawable.ic_plus);
         mDrawables[1] = getResources().getDrawable(R.drawable.ic_cross);
+
         fab_image.setIcon(mDrawables[index], false);
         fab_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ListActivity.this, PrefsActivity.class);
-                startActivity(intent);
+                hideEmptyStateView(test_test);
+                test_test = !test_test;
                 //index = (index + 1) % 2;
                 //fab_image.setIcon(mDrawables[index], true);
             }
@@ -92,18 +112,23 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         rvAdapter = new RVAdapter(this, new ArrayList<AdapterModel>());
         rv.setAdapter(rvAdapter);
 
-        getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), this).forceLoad();
+        getLoaderManager().initLoader(URL_LOADER, null, this).forceLoad();//getIntent().getExtras()
     }
 
     @Override
     public Loader<List<AdapterModel>> onCreateLoader(int loaderID, Bundle bundle) {
 
-        //Log.d(TAG, "||onCreateLoader()|| - " + bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
-
         switch (loaderID) {
 
             case URL_LOADER:
-                return new AsyncArrayLoader(this, 6);//bundle.getInt(MainActivityPrefs.NUMBER_OF_INTERVALS));
+                preferences = getSharedPreferences(AppPrefs.APP_PREFS, MODE_PRIVATE);
+                int repsAmount = preferences.getInt(getString(R.string.reps_key), -1);
+
+                Log.v("onCreateLoader", "repsAmount - " + repsAmount);
+                //if (repsAmount  == -1)
+                //    throw new RuntimeException(getString(R.string.reps_key) + " wasn't set up");
+
+                return new AsyncArrayLoader(this, repsAmount);
 
             default:
                 return null;
@@ -115,15 +140,15 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<AdapterModel>> loader, List<AdapterModel> databaseModels) {
 
+        rvAdapter.setModels(databaseModels);
+
         long current = Utilities.getCurrentTime();
-        Log.w("onLoadFinished", "databaseModels.get(databaseModels.size() - 1).getId() "
-                + databaseModels.get(databaseModels.size() - 1).getTime()
-                + "          [databaseModels.size() - 1] " + (databaseModels.size() - 1));
+
         if (databaseModels.size() == 0 || databaseModels.get(databaseModels.size() - 1).getTime() < current) {
-            rv.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            hideEmptyStateView(false);
         } else
-            rvAdapter.setModels(databaseModels);
+            hideEmptyStateView(true);
+
     }
 
     @Override
@@ -169,6 +194,34 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onStop() {
         super.onStop();
         unregisterReceiver(broadcast);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == RESULT_CODE) {
+
+            if (resultCode == RESULT_OK) {
+                getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), this).forceLoad();
+                //что-то с лоадером
+                Toast.makeText(this, "RESULT_OK", Toast.LENGTH_LONG).show();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "RESULT_CANCELED", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void hideEmptyStateView(boolean b) {
+        //TODO or setContent visible
+        if (b) {
+            emptyView.setVisibility(View.GONE);
+            rv.setVisibility(View.VISIBLE);
+        } else {
+            rv.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     class MyBroadcast extends BroadcastReceiver {
