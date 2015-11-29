@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.rey.material.widget.FloatingActionButton;
@@ -160,6 +162,23 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem item = menu.findItem(R.id.action_switch);
+        if (item != null) {
+
+            SwitchCompat action_bar_switch = (SwitchCompat) item.getActionView().findViewById(R.id.action_switch);
+            if (action_bar_switch != null) {
+
+                action_bar_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        int resId = isChecked ? R.string.enabled : R.string.disabled;
+                        Toast.makeText(ListActivity.this, getString(resId), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        }
         return true;
     }
 
@@ -178,6 +197,11 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (id == R.id.action_list) {
             Toast.makeText(this, "action_list", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (id == R.id.action_switch) {
+            Toast.makeText(this, "action_switch", Toast.LENGTH_SHORT).show();
             return true;
         }
 

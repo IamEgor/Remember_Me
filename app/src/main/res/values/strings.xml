@@ -3,6 +3,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_switch">Switch</string>
+
+    <string name="enabled">Toolbar enabled</string>
+    <string name="disabled">Toolbar disabled</string>
 
     <string name="time_format">HH:mm</string>
 

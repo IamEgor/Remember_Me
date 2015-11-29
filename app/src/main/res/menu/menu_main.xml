@@ -14,4 +14,10 @@
         android:title="Search"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_switch"
+        android:title="@string/action_switch"
+        app:actionLayout="@layout/toolbar_switch"
+        app:showAsAction="always" />
+
 </menu>
