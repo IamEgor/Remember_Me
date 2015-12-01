@@ -31,6 +31,10 @@
 
         <activity android:name=".Activities.PrefsActivity" />
 
+        <activity
+            android:name=".Activities.GraphicActivity"
+            android:screenOrientation="landscape" />
+
         <!-- Receivers -->
 
         <receiver android:name=".BroadcastReceivers.AlarmReceiver" />

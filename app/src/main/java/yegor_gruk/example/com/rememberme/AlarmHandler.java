@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,6 +14,7 @@ import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
 import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
 import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
 import yegor_gruk.example.com.rememberme.DataBase.ModelDAO;
+import yegor_gruk.example.com.rememberme.Util.Utilities;
 
 public class AlarmHandler {
 
@@ -74,7 +74,7 @@ public class AlarmHandler {
 
         @Override
         public void run() {
-            SimpleDateFormat format = new SimpleDateFormat(context.getString(R.string.time_format));
+            //SimpleDateFormat format = new SimpleDateFormat(context.getString(R.string.time_format));
 
             DatabaseModel databaseModel = new DatabaseModel();
 
@@ -85,7 +85,7 @@ public class AlarmHandler {
 
                 for (long alarmTime : alarms) {
 
-                    Log.wtf("!!!!!", "alarm at " + format.format(alarmTime));
+                    Log.wtf("!!!!!", "alarm at " + Utilities.format(alarmTime));
 
                     databaseModel.setRepTime(alarmTime);
                     databaseModel.setIsActive(true);

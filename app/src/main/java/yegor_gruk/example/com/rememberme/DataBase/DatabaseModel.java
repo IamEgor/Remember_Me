@@ -1,5 +1,6 @@
 package yegor_gruk.example.com.rememberme.DataBase;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -18,7 +19,7 @@ public class DatabaseModel {
     @DatabaseField(columnName = TIME)
     private long repTime;
 
-    @DatabaseField(columnName = IS_ACTIVE)
+    @DatabaseField(columnName = IS_ACTIVE, dataType = DataType.BOOLEAN)
     private boolean isActive;
 
     public Long getId() {

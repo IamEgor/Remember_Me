@@ -30,9 +30,10 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'
 
+    compile 'org.adw.library:discrete-seekbar:1.0.0'
     compile 'com.github.rey5137:material:1.2.1.6-SNAPSHOT'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
 
     compile files('src/main/libs/JavaTestProject.jar')
 
-    compile 'org.adw.library:discrete-seekbar:1.0.0'
 }

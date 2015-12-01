@@ -18,8 +18,8 @@ import yegor_gruk.example.com.rememberme.R;
 
 public class Utilities {
 
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
     private static final double GOLDEN_RATIO = 1.61803398875;
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
     public static int getAnatomicSpinnerDrag(int usualProgress) {
 
@@ -29,6 +29,10 @@ public class Utilities {
     public static int getUsualSpinnerDrag(int anatomicProgress) {
 
         return (int) Math.pow((anatomicProgress - 1) * 86.89, 1 / GOLDEN_RATIO);
+    }
+
+    public static String format(long time) {
+        return dateFormat.format(time);
     }
 
     public static long calculateInterval(TextView firstPoint, TextView secondPoint, TextView times) throws ParseException {
@@ -156,8 +160,11 @@ public class Utilities {
         return calendar;
     }
 
-
     public static long getCurrentTime() {
         return System.currentTimeMillis();
+    }
+
+    public static String getCurrentTimeStr() {
+        return format(System.currentTimeMillis());
     }
 }

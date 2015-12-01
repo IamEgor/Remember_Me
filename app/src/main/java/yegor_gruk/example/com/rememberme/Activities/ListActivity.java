@@ -26,11 +26,14 @@ import android.widget.Toast;
 
 import com.rey.material.widget.FloatingActionButton;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import yegor_gruk.example.com.rememberme.Adapters.RVAdapter;
 import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
+import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
+import yegor_gruk.example.com.rememberme.DataBase.ModelDAO;
 import yegor_gruk.example.com.rememberme.Loaders.AsyncArrayLoader;
 import yegor_gruk.example.com.rememberme.Models.AdapterModel;
 import yegor_gruk.example.com.rememberme.Prefs.AppPrefs;
@@ -99,7 +102,22 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         fab_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideEmptyStateView(test_test);
+
+                try {
+                    ModelDAO dao = HelperFactory.getHelper().getModelDAO();
+                    //rvAdapter.notifyDataSetChanged();
+                    //List<DatabaseModel> list = dao.getActiveLastRecords();
+                    //for (DatabaseModel model : list)
+                    //    Log.wtf("fab_image", model.toString());
+
+                    for (String[] resultArray : dao.getStatistics())
+                        Log.wtf("fab_image", resultArray[0] + " " + resultArray[1] + " " + resultArray[2]);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+
+
+                //hideEmptyStateView(test_test);
                 test_test = !test_test;
                 //index = (index + 1) % 2;
                 //fab_image.setIcon(mDrawables[index], true);
@@ -167,13 +185,27 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         if (item != null) {
 
             SwitchCompat action_bar_switch = (SwitchCompat) item.getActionView().findViewById(R.id.action_switch);
+
             if (action_bar_switch != null) {
+
+                action_bar_switch.setChecked(true);
 
                 action_bar_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                         int resId = isChecked ? R.string.enabled : R.string.disabled;
+
+                        try {
+                            ModelDAO dao = HelperFactory.getHelper().getModelDAO();
+                            dao.setActiveLastRecords(isChecked);
+                            //rvAdapter.notifyDataSetChanged();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e.getMessage());
+                        }
+
                         Toast.makeText(ListActivity.this, getString(resId), Toast.LENGTH_SHORT).show();
+                        rvAdapter.notifyDataSetChanged();
                     }
                 });
 
@@ -188,7 +220,6 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Toast.makeText(this, "action_settings", Toast.LENGTH_SHORT).show();
@@ -197,6 +228,8 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (id == R.id.action_list) {
             Toast.makeText(this, "action_list", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ListActivity.this, GraphicActivity.class);
+            startActivity(intent);
             return true;
         }
 
