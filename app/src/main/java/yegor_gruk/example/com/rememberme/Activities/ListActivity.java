@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yegor_gruk.example.com.rememberme.Adapters.RVAdapter;
-import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
 import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
 import yegor_gruk.example.com.rememberme.DataBase.ModelDAO;
 import yegor_gruk.example.com.rememberme.Loaders.AsyncArrayLoader;
@@ -42,11 +41,11 @@ import yegor_gruk.example.com.rememberme.Util.Utilities;
 
 public class ListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<AdapterModel>> {
 
-    public static final String TAG = ListActivity.class.getName();
-    public static final int RESULT_CODE = 1;
+    public static final String BROADCAST_ACTION = ListActivity.class.getName();
 
+    public static final int RESULT_CODE = 1;
     private static final int URL_LOADER = 0;
-    IntentFilter filter = new IntentFilter(AlarmReceiver.STRING);
+    IntentFilter filter = new IntentFilter(BROADCAST_ACTION);
     MyBroadcast broadcast = new MyBroadcast();
     Button button;
     boolean test_test;
@@ -102,23 +101,9 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         fab_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try {
-                    ModelDAO dao = HelperFactory.getHelper().getModelDAO();
-                    //rvAdapter.notifyDataSetChanged();
-                    //List<DatabaseModel> list = dao.getActiveLastRecords();
-                    //for (DatabaseModel model : list)
-                    //    Log.wtf("fab_image", model.toString());
-
-                    for (String[] resultArray : dao.getStatistics())
-                        Log.wtf("fab_image", resultArray[0] + " " + resultArray[1] + " " + resultArray[2]);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-
-
                 //hideEmptyStateView(test_test);
-                test_test = !test_test;
+                //test_test = !test_test;
+
                 //index = (index + 1) % 2;
                 //fab_image.setIcon(mDrawables[index], true);
             }
@@ -141,12 +126,11 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (loaderID) {
 
             case URL_LOADER:
+
                 preferences = getSharedPreferences(AppPrefs.APP_PREFS, MODE_PRIVATE);
                 int repsAmount = preferences.getInt(getString(R.string.reps_key), -1);
 
                 Log.v("onCreateLoader", "repsAmount - " + repsAmount);
-                //if (repsAmount  == -1)
-                //    throw new RuntimeException(getString(R.string.reps_key) + " wasn't set up");
 
                 return new AsyncArrayLoader(this, repsAmount);
 
@@ -244,6 +228,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
+        rvAdapter.notifyDataSetChanged();
         registerReceiver(broadcast, filter);
     }
 
@@ -259,8 +244,6 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         if (requestCode == RESULT_CODE) {
 
             if (resultCode == RESULT_OK) {
-                getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), this).forceLoad();
-                //что-то с лоадером
                 Toast.makeText(this, "RESULT_OK", Toast.LENGTH_LONG).show();
             }
             if (resultCode == RESULT_CANCELED) {
@@ -285,8 +268,20 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(ListActivity.this, "MyBroadcast notifyDataSetChanged", Toast.LENGTH_LONG).show();
-            rvAdapter.notifyDataSetChanged();
+
+            String extras = intent.getStringExtra(BROADCAST_ACTION);
+
+            if (extras == null)
+                throw new RuntimeException();
+
+            if (extras.equals(Utilities.NOTIFY_DATA)) {
+                rvAdapter.notifyDataSetChanged();
+                Toast.makeText(ListActivity.this, "MyBroadcast notifyDataSetChanged", Toast.LENGTH_LONG).show();
+            } else if (extras.equals(Utilities.CALL_LOADER)) {
+                getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), ListActivity.this).forceLoad();
+                Toast.makeText(ListActivity.this, "MyBroadcast getLoaderManager", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 

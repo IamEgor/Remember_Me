@@ -98,7 +98,7 @@ public class ModelDAO extends BaseDaoImpl<DatabaseModel, Integer> {
         );
 
         qb.groupByRaw(alias + " , " + DatabaseModel.IS_ACTIVE);
-        qb.orderByRaw(alias);
+        qb.orderByRaw(DatabaseModel.TIME);
 
         MyLogger.log(qb.prepareStatementString());
 

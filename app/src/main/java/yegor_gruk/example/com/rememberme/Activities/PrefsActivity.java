@@ -18,7 +18,7 @@ import yegor_gruk.example.com.rememberme.Util.Utilities;
 
 public class PrefsActivity extends AppCompatPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public static final String REMOVE_EXTRA = "remove_extra";
+    private static final String REMOVE_EXTRA = "remove_extra";
 
     private static final String PREFERENCE_KEY = "MyTimePref";
     private final View.OnClickListener mActionBarListener = new View.OnClickListener() {
@@ -28,7 +28,7 @@ public class PrefsActivity extends AppCompatPreferenceActivity implements Shared
             if (v.getId() == R.id.action_done) {
                 try {
                     AlarmHandler alarmHandler = new AlarmHandler(PrefsActivity.this);
-                    alarmHandler.createAlarmQueue(Utilities.getAlarmsTime(PrefsActivity.this));
+                    alarmHandler.createAlarmQueueThenCallLoader(Utilities.getAlarmsTime(PrefsActivity.this));
                     setResult(RESULT_OK, returnIntent);
                 } catch (ParseException e) {
                     throw new RuntimeException();

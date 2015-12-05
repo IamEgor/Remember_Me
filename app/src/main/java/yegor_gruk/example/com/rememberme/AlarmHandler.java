@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import yegor_gruk.example.com.rememberme.Activities.ListActivity;
 import yegor_gruk.example.com.rememberme.BroadcastReceivers.AlarmReceiver;
 import yegor_gruk.example.com.rememberme.DataBase.DatabaseModel;
 import yegor_gruk.example.com.rememberme.DataBase.HelperFactory;
@@ -39,6 +40,9 @@ public class AlarmHandler {
         service.execute(new MyRunnable(alarms));
     }
 
+    public void createAlarmQueueThenCallLoader(long[] alarms) {
+        service.execute(new MyRunnable(alarms, true));
+    }
 
     public void setAlarm(long idAndTime) {
 
@@ -66,15 +70,20 @@ public class AlarmHandler {
 
     class MyRunnable implements Runnable {
 
+        private boolean callLoader = false;
         private long[] alarms;
 
         public MyRunnable(long[] alarms) {
             this.alarms = alarms;
         }
 
+        public MyRunnable(long[] alarms, boolean callLoader) {
+            this.alarms = alarms;
+            this.callLoader = callLoader;
+        }
+
         @Override
         public void run() {
-            //SimpleDateFormat format = new SimpleDateFormat(context.getString(R.string.time_format));
 
             DatabaseModel databaseModel = new DatabaseModel();
 
@@ -93,6 +102,12 @@ public class AlarmHandler {
                     dao.create(databaseModel);
 
                     setAlarm(alarmTime);
+                }
+
+                if (callLoader) {
+                    Intent intent = new Intent(ListActivity.BROADCAST_ACTION);
+                    intent.putExtra(ListActivity.BROADCAST_ACTION, Utilities.CALL_LOADER);
+                    context.sendBroadcast(intent);
                 }
 
             } catch (SQLException e) {

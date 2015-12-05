@@ -18,6 +18,11 @@ import yegor_gruk.example.com.rememberme.R;
 
 public class Utilities {
 
+    //For extras
+    //----------------------------------------------------------------------------------------------
+    public static final String NOTIFY_DATA = "NOTIFY_DATA";
+    public static final String CALL_LOADER = "CALL_LOADER";
+    //----------------------------------------------------------------------------------------------
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
     private static final double GOLDEN_RATIO = 1.61803398875;
 

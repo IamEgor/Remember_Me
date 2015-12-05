@@ -37,6 +37,7 @@ public class GraphicActivity extends Activity {
 
         setContentView(R.layout.activity_graphics);
 
+        //mChart.setAutoScaleMinMaxEnabled(true);
         //mChart.setOnChartValueSelectedListener(this);
         mChart = (LineChart) findViewById(R.id.chart);
         mChart.setDrawGridBackground(false);
@@ -88,6 +89,8 @@ public class GraphicActivity extends Activity {
             int currentIndex;
 
             for (String[] resultArray : dao.getStatistics()) {
+
+                //MyLogger.log(" " + resultArray[0] + " " + resultArray[1] + " " + resultArray[2] + " " + resultArray[3]);
 
                 currentVal = Float.parseFloat(resultArray[1]);
 
@@ -143,8 +146,8 @@ public class GraphicActivity extends Activity {
         set1.setDrawCircleHole(false);
         set2.setDrawCircleHole(false);
 
-        set1.setDrawCubic(true);
-        set2.setDrawCubic(true);
+        set1.setDrawCubic(false);
+        set2.setDrawCubic(false);
 
         set1.setDrawFilled(true);
         set2.setDrawFilled(true);
