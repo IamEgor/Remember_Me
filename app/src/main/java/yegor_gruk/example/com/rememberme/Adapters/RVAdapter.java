@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -78,7 +80,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
 
         holder.id.setTextColor(context.getResources().getColor(model.getTextColor()));
         holder.time.setTextColor(context.getResources().getColor(model.getTextColor()));
-
+        //----------------------------------------------------------------------------------------------
+        animateView(holder.cv, position);
+        //----------------------------------------------------------------------------------------------
     }
 
     @Override
@@ -89,6 +93,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
     @Override
     public void onClick(View v) {
 
+    }
+
+    //----------------------------------------------------------------------------------------------
+    private void animateView(View view, int position) {
+        //if (position > mLastPosition) {
+        //    mLastPosition = position;
+
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.card);
+        view.startAnimation(animation);
+        //}
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -107,4 +121,5 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
             image = (ImageView) itemView.findViewById(R.id.testImageButton);
         }
     }
+    //----------------------------------------------------------------------------------------------
 }

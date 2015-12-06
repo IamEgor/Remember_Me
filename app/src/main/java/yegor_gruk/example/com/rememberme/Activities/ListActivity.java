@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -36,6 +35,7 @@ import yegor_gruk.example.com.rememberme.DataBase.ModelDAO;
 import yegor_gruk.example.com.rememberme.Loaders.AsyncArrayLoader;
 import yegor_gruk.example.com.rememberme.Models.AdapterModel;
 import yegor_gruk.example.com.rememberme.Prefs.AppPrefs;
+import yegor_gruk.example.com.rememberme.Prefs.ListActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
 import yegor_gruk.example.com.rememberme.Util.Utilities;
 
@@ -47,14 +47,16 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int URL_LOADER = 0;
     IntentFilter filter = new IntentFilter(BROADCAST_ACTION);
     MyBroadcast broadcast = new MyBroadcast();
-    Button button;
+    com.rey.material.widget.Button button;
     boolean test_test;
-    SharedPreferences preferences;
+    SharedPreferences preferences;//TODO есть
     private RVAdapter rvAdapter;
     private RecyclerView rv;
     private View emptyView;
     private Drawable[] mDrawables = new Drawable[2];
     private int index;
+
+    private ListActivityPrefs prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +82,10 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         rv = (RecyclerView) findViewById(R.id.rv);
         emptyView = findViewById(R.id.empty_recycle);
-        button = (Button) findViewById(R.id.setAlarmBtn);
+        button = (com.rey.material.widget.Button) findViewById(R.id.setAlarm);
 
         preferences = getSharedPreferences(AppPrefs.APP_PREFS, MODE_PRIVATE);
+        prefs = new ListActivityPrefs(this);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +175,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
             if (action_bar_switch != null) {
 
-                action_bar_switch.setChecked(true);
+                action_bar_switch.setChecked(prefs.isSwitchEnabled());
 
                 action_bar_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -189,7 +192,8 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
                         }
 
                         Toast.makeText(ListActivity.this, getString(resId), Toast.LENGTH_SHORT).show();
-                        rvAdapter.notifyDataSetChanged();
+                        //rvAdapter.notifyDataSetChanged();
+                        getLoaderManager().initLoader(URL_LOADER, null, ListActivity.this).forceLoad();
                     }
                 });
 
@@ -261,7 +265,6 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             rv.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
-
     }
 
     class MyBroadcast extends BroadcastReceiver {
@@ -278,10 +281,9 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
                 rvAdapter.notifyDataSetChanged();
                 Toast.makeText(ListActivity.this, "MyBroadcast notifyDataSetChanged", Toast.LENGTH_LONG).show();
             } else if (extras.equals(Utilities.CALL_LOADER)) {
-                getLoaderManager().initLoader(URL_LOADER, getIntent().getExtras(), ListActivity.this).forceLoad();
+                getLoaderManager().initLoader(URL_LOADER, null, ListActivity.this).forceLoad();
                 Toast.makeText(ListActivity.this, "MyBroadcast getLoaderManager", Toast.LENGTH_LONG).show();
             }
-
         }
     }
 

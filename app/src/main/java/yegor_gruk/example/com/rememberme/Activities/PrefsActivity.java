@@ -13,6 +13,7 @@ import java.text.ParseException;
 
 import yegor_gruk.example.com.rememberme.AlarmHandler;
 import yegor_gruk.example.com.rememberme.Prefs.AppPrefs;
+import yegor_gruk.example.com.rememberme.Prefs.ListActivityPrefs;
 import yegor_gruk.example.com.rememberme.R;
 import yegor_gruk.example.com.rememberme.Util.Utilities;
 
@@ -29,6 +30,7 @@ public class PrefsActivity extends AppCompatPreferenceActivity implements Shared
                 try {
                     AlarmHandler alarmHandler = new AlarmHandler(PrefsActivity.this);
                     alarmHandler.createAlarmQueueThenCallLoader(Utilities.getAlarmsTime(PrefsActivity.this));
+                    new ListActivityPrefs(PrefsActivity.this).setSwitchState(true);
                     setResult(RESULT_OK, returnIntent);
                 } catch (ParseException e) {
                     throw new RuntimeException();

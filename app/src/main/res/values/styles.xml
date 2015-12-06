@@ -71,6 +71,10 @@
         <item name="android:padding">4dp</item>
     </style>
 
+    <style name="FlatWaveColorButtonRippleStyle" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="rd_rippleColor">@color/primary</item>
+        <item name="rd_cornerRadius">4dp</item>
+    </style>
     <!--=========================================================================================-->
 
 </resources>

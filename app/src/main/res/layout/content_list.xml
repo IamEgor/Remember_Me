@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:materialdesign="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,50 +19,41 @@
     <LinearLayout
         android:id="@+id/empty_recycle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/layout_border"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="20dp"
-        android:paddingTop="20dp"
-        android:visibility="visible">
+        android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/clock_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_empty_clock_48dp" />
+            android:src="@drawable/turn18" />
 
         <TextView
-            android:id="@+id/text_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/footer_button_layout_margin"
-            android:gravity="center_horizontal"
-            android:text="@string/empty_list_title"
-            android:textColor="@android:color/white"
-            android:textSize="26sp" />
-
-        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_boarder"
-            android:padding="1dp">
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/empty_list_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/darker_gray" />
 
-            <Button
-                android:id="@+id/setAlarmBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
-                android:padding="10sp"
-                android:text="Your text goes here"
-                android:textColor="@android:color/black" />
-
-        </FrameLayout>
+        <com.rey.material.widget.Button
+            android:id="@+id/setAlarm"
+            style="@style/FlatWaveColorButtonRippleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@null"
+            android:padding="5dp"
+            android:text="Добавить"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+            android:textColor="#FF2196F3"
+            android:textSize="18sp"
+            materialdesign:rd_delayClick="afterRelease"
+            materialdesign:rd_enable="true" />
 
     </LinearLayout>
-
 
 </LinearLayout>
